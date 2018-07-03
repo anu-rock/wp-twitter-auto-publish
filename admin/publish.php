@@ -256,7 +256,7 @@ function xyz_twap_link_publish($post_ID) {
 		$tags = '';
 		if ( $post_tags ) {
 			foreach( $post_tags as $tag ) {
-				$tags = $tags . '#'. $tag->name . ' '; 
+				$tags = $tags . '#'. sanitize_twitter_hashtag($tag->name) . ' ';
 			}
 		}
 
@@ -502,6 +502,24 @@ function xyz_twap_link_publish($post_ID) {
 	
 	$_POST=$_POST_CPY;
 
+}
+
+function sanitize_twitter_hashtag($tag) {
+	$placeholder_char = "$";
+	# Replace all special chars (except _) with a placeholder char (*)
+	$semi_clean_tag = preg_replace('/[^A-Za-z0-9_]/', $placeholder_char, $tag);
+	if ( strpos ( $semi_clean_tag, $placeholder_char ) !== FALSE ) {
+		# Split the tag around hyphens,
+		# which are valid WP tags but not valid Twitter hashtags
+		$tag_pieces = explode ( $placeholder_char, $semi_clean_tag );
+		# Uppercase first char of each tag piece
+		$tag_pieces = array_map ( "ucfirst", $tag_pieces );
+		# Glue all pieces together and return the reformed tag
+		return implode ( $tag_pieces );
+	} else {
+		$clean_tag = str_replace ( $placeholder_char, "", $semi_clean_tag );
+		return $clean_tag;
+	}
 }
 
 ?>

@@ -95,7 +95,7 @@ if(isset($_POST['twit']))
 		$terf=0;
 		if($tmessagetopost=="")
 		{
-			$tmessagetopost="{POST_TITLE} {POST_TAGS} - {PERMALINK}";
+			$tmessagetopost="{POST_TITLE} {POST_TAGS} {PERMALINK}";
 		}
 
 		update_option('xyz_twap_twconsumer_id',$tappid);
